@@ -7,23 +7,23 @@ import { Header, SearchForm, SearchButton, SearchButtonLabel, SearchInput } from
 export class Searchbar extends Component {
 
   state = {
-    imageCategory: ''
+    query: ''
 
   }
 
-  handelCategoryChange = e => {
-    this.setState ({imageCategory: e.currentTarget.value.toLowerCase() })
+  handelQueryChange = e => {
+    this.setState ({query: e.currentTarget.value.toLowerCase() })
   }
 
   submit = (e) => {
     e.preventDefault();
 
-    if(this.state.imageCategory.trim() === ''){
+    if(this.state.query.trim() === ''){
       toast('Enter data to search');
       return
     }
-    this.props.onSubmit(this.state.imageCategory)
-    this.setState({imageCategory: ''})
+    this.props.onSubmit(this.state.query)
+    this.setState({query: ''})
   }
 
   render() {
@@ -41,8 +41,8 @@ export class Searchbar extends Component {
           autocomplete="off"
           autoFocus
           placeholder="Search images and photos"
-          value = { this.state.imageCategory }
-          onChange = {this.handelCategoryChange}
+          value = { this.state.query }
+          onChange = {this.handelQueryChange}
         />
       </SearchForm>
     </Header>
