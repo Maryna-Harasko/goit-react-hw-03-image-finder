@@ -1,12 +1,12 @@
 import React, {Component} from "react";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import { Modal } from "./Modal/Modal";
 import { Searchbar } from "./Searchbar/Searchbar";
 import { getImage } from "Service/Service";
 import { ImageGallery } from "./ImageGallery/ImageGallery";
 import { LoadButton } from "./Button/Button";
 import { Loader } from "./Loader/Loader";
-import { AppContainer } from "./App.styled";
+import { AppContainer, Image } from "./App.styled";
 import "react-toastify/dist/ReactToastify.css";
 
 export class App extends Component {
@@ -32,6 +32,13 @@ export class App extends Component {
       catch (error) {console.log(error);}
       finally{
         this.setState({ isLoading: false })
+        const { totalHits, hits: newHits } = await getImage(query, page)
+        if (
+          (prevState.hits.length === 0 && newHits.length === totalHits) ||
+          (prevState.hits.length !== 0 && newHits.length < 12)
+        ) {
+          toast.info('No more images this category');
+        }
       }
     }
 }
@@ -62,7 +69,7 @@ export class App extends Component {
         )}
         {largeImageURL && (
           <Modal onClose={this.toggleModal}>
-            <img src={largeImageURL} alt={tag} />
+            <Image src={largeImageURL} alt={tag} />
           </Modal>
         )}
         {isLoading && <Loader/>}
