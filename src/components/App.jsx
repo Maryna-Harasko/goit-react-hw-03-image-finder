@@ -12,15 +12,15 @@ import "react-toastify/dist/ReactToastify.css";
 export class App extends Component {
 
   state = {
-    showModal: false,
     query: "",
     hits: [],
     page: 1,
     isLoading: false,
     totalHits: 0,
-    largeImage: "",
+    largeImageURL: "",
     isShowButton: false
   }
+
   async componentDidUpdate(_, prevState){
     const { query, page } = this.state
     if(prevState.query !== query || prevState.page !== page){
@@ -40,10 +40,8 @@ export class App extends Component {
       this.setState({query: q, hits:[], page: 1, isShowButton: false})
   }
 
-  toggleModal =() =>{
-    this.setState(prevState => ({
-      showModal: !prevState.showModal,
-    }))
+  toggleModal =(largeImageURL = "") =>{
+    this.setState({largeImageURL: largeImageURL})
   }
 
   handleNextPage = () => {
@@ -52,19 +50,19 @@ export class App extends Component {
  
 
   render(){
-    const { showModal, hits, isLoading, totalHits } = this.state;
+    const { hits, isLoading, totalHits, largeImageURL, tag } = this.state;
     const isShowBtn = !isLoading && hits.length !== totalHits;
     return (
       <AppContainer>
         <Searchbar onSubmit = {this.handleFormSubmit}/>
         {hits.length >0 && 
-          (<ImageGallery cards={hits}/>)}
+          (<ImageGallery cards={hits} handleClickCard={this.toggleModal}/>)}
         {isShowBtn && 
           (<LoadButton onClick={this.handleNextPage} disabled={isLoading}/>
         )}
-        {showModal && (
+        {largeImageURL && (
           <Modal onClose={this.toggleModal}>
-            <img src="" alt="Hello" />
+            <img src={largeImageURL} alt={tag} />
           </Modal>
         )}
         {isLoading && <Loader/>}
